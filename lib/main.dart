@@ -1,9 +1,14 @@
-import 'package:bytebank/screens/contacts_form.dart';
+import 'package:bytebank/database/app_database.dart';
+import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(ByteBankApp());
-
+void main() {
+  runApp(ByteBankApp());
+  save(Contact(0, 'alex', 1000)).then((id) {
+    findAll().then((contacts) => debugPrint(contacts.toString()));
+  });
+}
 class ByteBankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,7 @@ class ByteBankApp extends StatelessWidget {
               textTheme: ButtonTextTheme.primary,
             )
         ),
-      home: ContactsForm()
+      home: DashBoard()
     );
   }
 }

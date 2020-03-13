@@ -1,9 +1,16 @@
-import 'package:bytebank/database/app_database.dart';
+import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact_form.dart';
 import 'package:flutter/material.dart';
 
-class ContactsList extends StatelessWidget {
+class ContactsList extends StatefulWidget {
+  @override
+  _ContactsListState createState() => _ContactsListState();
+}
+
+class _ContactsListState extends State<ContactsList> {
+  final ContactDao _dao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +19,7 @@ class ContactsList extends StatelessWidget {
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
-        future: findAll(),
+        future: _dao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -24,6 +31,7 @@ class ContactsList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     CircularProgressIndicator(),
+                    Text('Loading')
                   ],
                 ),
               );
@@ -35,26 +43,45 @@ class ContactsList extends StatelessWidget {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final Contact contact = contacts[index];
-                  return _ContactItem(contact);
+                  return Dismissible(
+                    key: Key(contact.toString()),
+                    child: _ContactItem(contact),
+                    //  direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      setState(() {
+                        _dao.delete(contact.id);
+                      });
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("$contact dismissed"),
+                          duration: Duration(milliseconds: 900),
+                        ),
+                      );
+                    },
+                    background: Container(
+                      color: Colors.red,
+                    ),
+                  );
                 },
                 itemCount: contacts.length,
               );
+
               break;
-          };
+          }
           return Text('Unknown error');
-        }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => ContactForm(),
             ),
-          )
-              .then((newContact) => debugPrint(newContact.toString()));
+          );
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+        ),
       ),
     );
   }
@@ -71,18 +98,17 @@ class _ContactItem extends StatelessWidget {
       child: ListTile(
         title: Text(
           contact.name,
-          style: TextStyle(fontSize: 24.0),
+          style: TextStyle(
+            fontSize: 24.0,
+          ),
         ),
         subtitle: Text(
           contact.accountNumber.toString(),
-          style: TextStyle(fontSize: 24.0),
+          style: TextStyle(
+            fontSize: 16.0,
+          ),
         ),
       ),
     );
   }
 }
-
-class _Loadind {
-
-}
-

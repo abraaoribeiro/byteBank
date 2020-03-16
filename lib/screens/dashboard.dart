@@ -1,4 +1,5 @@
 import 'package:bytebank/screens/contacts_list.dart';
+import 'package:bytebank/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 
 class DashBoard extends StatelessWidget {
@@ -24,23 +25,12 @@ class DashBoard extends StatelessWidget {
                 _FeatureItem(
                   'Transfer',
                   Icons.monetization_on,
-                  onClick: () {
-                    _showContactsList(context);
-                  },
+                  onClick: () => _showContactsList(context),
                 ),
                 _FeatureItem(
                   'Transaction Feed',
                   Icons.description,
-                  onClick: () {
-                    debugPrint('Transaction feed was clicked ');
-                  },
-                ),
-                _FeatureItem(
-                  'Transaction Feed',
-                  Icons.description,
-                  onClick: () {
-                    debugPrint('Transaction feed was clicked ');
-                  },
+                  onClick: () => _showTransactionsList(context),
                 ),
               ],
             ),
@@ -53,10 +43,15 @@ class DashBoard extends StatelessWidget {
 
 class _FeatureItem extends StatelessWidget {
   final String name;
-  final IconData iconData;
+  final IconData icon;
   final Function onClick;
 
-  _FeatureItem(this.name, this.iconData, {@required this.onClick});
+  _FeatureItem(
+    this.name,
+    this.icon, {
+    @required this.onClick,
+  })  : assert(icon != null),
+        assert(onClick != null);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +69,7 @@ class _FeatureItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Icon(
-                  iconData,
+                  icon,
                   color: Colors.white,
                   size: 24.0,
                 ),
@@ -98,6 +93,14 @@ void _showContactsList(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) => ContactsList(),
+    ),
+  );
+}
+
+void _showTransactionsList(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => TransactionsList(),
     ),
   );
 }

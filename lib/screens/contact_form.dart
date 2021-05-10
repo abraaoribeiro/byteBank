@@ -17,7 +17,7 @@ class _ContactFormState extends State<ContactForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('New contact'),
+        title: Text('New Transfer'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -50,14 +50,9 @@ class _ContactFormState extends State<ContactForm> {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: SizedBox(
                   width: double.maxFinite,
-                  child: RaisedButton(
+                  child: ElevatedButton(
                     child: Text('Create', style: TextStyle(fontSize: 14.0),),
-                    onPressed: () {
-                      final String name = _nameController.text;
-                      final int accountNumber =  int.tryParse(_accountNumberController.text);
-                      final Contact newContact = Contact(0, name, accountNumber);
-                        _dao.save(newContact).then((id) => Navigator.pop(context));
-                    },
+                    onPressed: () => _criaTransaferencia(context),
                   ),
                 ),
               )
@@ -66,5 +61,12 @@ class _ContactFormState extends State<ContactForm> {
         ),
       ),
     );
+  }
+
+  void _criaTransaferencia(BuildContext context) {
+     final String name = _nameController.text;
+    final int accountNumber =  int.tryParse(_accountNumberController.text);
+    final Contact newContact = Contact(0, name, accountNumber);
+      _dao.save(newContact).then((id) => Navigator.pop(context, true));
   }
 }

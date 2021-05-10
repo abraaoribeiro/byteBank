@@ -30,6 +30,7 @@ dev_dependencies:
   sqflite:
   path:
   http:
+  http_interceptor:
 
 
 

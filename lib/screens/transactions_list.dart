@@ -1,3 +1,4 @@
+import 'package:bytebank/componentes/centered_message.dart';
 import 'package:bytebank/componentes/progress.dart';
 import 'package:bytebank/http/webclient.dart';
 import 'package:bytebank/models/transaction.dart';
@@ -17,15 +18,22 @@ class TransactionsList extends StatelessWidget {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-             return  Progress();
+              return Progress();
               break;
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              return ListTransaction(transactions: snapshot.data);
+              if (snapshot.hasData) {
+                List<Transaction> transactions = snapshot.data;
+                if (transactions.isNotEmpty) {
+                  return ListTransaction(transactions: transactions);
+                }
+              }
+              return CenteredMessage("No transactions found",
+                  icon: Icons.warning_outlined);
               break;
           }
-          return Text("Unknown error");
+          return CenteredMessage("Unknown error");
         },
       ),
     );

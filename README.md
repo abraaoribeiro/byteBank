@@ -1,6 +1,6 @@
 # bytebank
  
- ### Projeto desevolvido durante os cursos 
+ ### Projeto desenvolvido durante os cursos
 
 ![](./images/byteBanck.gif)
 

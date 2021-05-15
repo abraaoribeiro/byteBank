@@ -129,7 +129,7 @@ class _TransactionFormState extends State<TransactionForm> {
     final Transaction transaction =  await _webClient.save(transactionCreated, password).catchError((dynamic e) {
       _showFailureMessage(context, message: e.message);
     }, test: (e) => e is HttpException).catchError((e) {
-      _showFailureMessage(context,  message: 'timount submitting the transaction');
+      _showFailureMessage(context,  message: 'timeout submitting the transaction');
     }, test: (e) => e is TimeoutException).catchError((e) {
       _showFailureMessage(context);
     }).whenComplete(() =>  setState(() => _sending = false));

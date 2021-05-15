@@ -1,16 +1,17 @@
 # bytebank
+ 
+ ### Projeto desevolvido durante os cursos 
 
-A new Bytebank project.
+![](./images/byteBanck.gif)
 
-## Getting Started
+- Fundamentos de Flutter: Crie o seu primeiro App
+- Persistência com Flutter: Crie um app com armazenamento interno
+- Flutter com web API: integrando sua app mobile
+- Comunicação HTTP: Flutter com web API
 
-This project is a starting point for a Flutter application.
+### Conteúdo abordado 
 
-A few resources to get you started if this is your first Flutter project:
+ - Persistencia de dados com sqlite
+ - Integração com web api utilizando http
+ - Tratamento de erros http
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

@@ -116,7 +116,7 @@ class _TransactionFormState extends State<TransactionForm> {
       await showDialog(
         context: context,
         builder: (contextDialog) => SuccessDialog(
-          'successfull transaction',
+          'successful transaction',
         ),
       );
       Navigator.pop(context);

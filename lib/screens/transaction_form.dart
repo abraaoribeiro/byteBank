@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bytebank/componentes/response_dialog.dart';
 import 'package:bytebank/componentes/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transaction_webclient.dart';
@@ -17,6 +19,7 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _webClient = TransactionWebClient();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +99,12 @@ class _TransactionFormState extends State<TransactionForm> {
         context: context,
         builder: (contextDialog) => FailureDialog(e.message),
       );
-    }, test: (e) => e is Exception);
+    }, test: (e) => e is HttpException).catchError((e) {
+      showDialog(
+        context: context,
+        builder: (contextDialog) =>  FailureDialog('timount submitting the transaction'),
+      );
+    }, test: (e) => e is TimeoutException);
 
     if (transaction != null) {
       await showDialog(

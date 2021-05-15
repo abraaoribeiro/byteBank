@@ -10,7 +10,9 @@ class TransactionWebClient {
         await client.get(baseUrl).timeout(Duration(seconds: 5));
     final List<dynamic> decodedJson = jsonDecode(response.body);
 
-    return decodedJson.map((dynamic json) => Transaction.fromJson(json)).toList();
+    return decodedJson
+        .map((dynamic json) => Transaction.fromJson(json))
+        .toList();
   }
 
   Future<Transaction> save(Transaction transaction, String password) async {
@@ -24,8 +26,17 @@ class TransactionWebClient {
       },
       body: transactionJson,
     );
-
-    return Transaction.fromJson(jsonDecode(response.body));
+    if (response.statusCode == 200) {
+      return Transaction.fromJson(jsonDecode(response.body));
+    }
+    _throwHttpError(response.statusCode);
   }
 
+  void _throwHttpError(int statusCode) => throw Exception(_statusCodeResponse[statusCode]);
+
+
+  static final Map<int, String> _statusCodeResponse = { 
+    400 : 'there was an error submitting transaction',
+    401 : 'authetication failed'
+  };
 }

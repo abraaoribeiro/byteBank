@@ -6,6 +6,7 @@ import 'package:bytebank/http/webclients/transaction_webclient.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contact;
@@ -19,9 +20,11 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _webClient = TransactionWebClient();
+  final String transactionId = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
+    print(" Uuid Transaction $transactionId");
     return Scaffold(
       appBar: AppBar(
         title: Text('New transaction'),
@@ -64,10 +67,12 @@ class _TransactionFormState extends State<TransactionForm> {
                   child: ElevatedButton(
                     child: Text('Transfer'),
                     onPressed: () {
-                      final double value =
-                          double.tryParse(_valueController.text);
-                      final transactionCreated =
-                          Transaction(value, widget.contact);
+                      final double value = double.tryParse(_valueController.text);
+                      final transactionCreated = Transaction(
+                        transactionId,
+                        value,
+                        widget.contact,
+                      );
                       showDialog(
                         context: context,
                         builder: (contextDialog) => TransactionAuthDialog(
@@ -92,20 +97,11 @@ class _TransactionFormState extends State<TransactionForm> {
     String password,
     BuildContext context,
   ) async {
-    final Transaction transaction = await _webClient
-        .save(transactionCreated, password)
-        .catchError((dynamic e) {
-      showDialog(
-        context: context,
-        builder: (contextDialog) => FailureDialog(e.message),
-      );
-    }, test: (e) => e is HttpException).catchError((e) {
-      showDialog(
-        context: context,
-        builder: (contextDialog) =>  FailureDialog('timount submitting the transaction'),
-      );
-    }, test: (e) => e is TimeoutException);
+    Transaction transaction =  await _send(transactionCreated, password, context);
+     _showSuccessFullMessage(transaction, context);
+  }
 
+  Future _showSuccessFullMessage(Transaction transaction, BuildContext context) async {
     if (transaction != null) {
       await showDialog(
         context: context,
@@ -115,5 +111,25 @@ class _TransactionFormState extends State<TransactionForm> {
       );
       Navigator.pop(context);
     }
+  }
+
+  Future<Transaction> _send(Transaction transactionCreated, String password,
+      BuildContext context) async {
+    final Transaction transaction =
+    await _webClient.save(transactionCreated, password).catchError((dynamic e) {
+      _showFailureMessage(context, message: e.message);
+    }, test: (e) => e is HttpException).catchError((e) {
+      _showFailureMessage(context,  message: 'timount submitting the transaction');
+    }, test: (e) => e is TimeoutException).catchError((e) {
+      _showFailureMessage(context);
+    });
+    return transaction;
+  }
+
+  void _showFailureMessage(BuildContext context, {String message = 'Unknown error'}) {
+    showDialog(
+      context: context,
+      builder: (contextDialog) => FailureDialog(message),
+    );
   }
 }

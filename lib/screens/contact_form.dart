@@ -52,7 +52,7 @@ class _ContactFormState extends State<ContactForm> {
                   width: double.maxFinite,
                   child: ElevatedButton(
                     child: Text('Create', style: TextStyle(fontSize: 14.0),),
-                    onPressed: () => _criaTransaferencia(context),
+                    onPressed: () => _createTransaction(context),
                   ),
                 ),
               )
@@ -63,10 +63,10 @@ class _ContactFormState extends State<ContactForm> {
     );
   }
 
-  void _criaTransaferencia(BuildContext context) {
+  void _createTransaction(BuildContext context) {
      final String name = _nameController.text;
     final int accountNumber =  int.tryParse(_accountNumberController.text);
     final Contact newContact = Contact(0, name, accountNumber);
-      _dao.save(newContact).then((id) => Navigator.pop(context, true));
+      _dao.save(newContact).then((id) => Navigator.pop(context));
   }
 }

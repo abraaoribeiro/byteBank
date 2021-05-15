@@ -36,38 +36,19 @@ class _ContactsListState extends State<ContactsList> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final Contact contact = contacts[index];
-                  return Dismissible(
-                    key: Key(contact.toString()),
-                    child: _ContactItem(
-                      contact,
-                      onClick: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => TransactionForm(contact),
-                          ),
-                        );
-                      },
-                    ),
-                    //  direction: DismissDirection.endToStart,
-                    onDismissed: (direction) {
-                      setState(() {
-                        _dao.delete(contact.id);
-                      });
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("$contact dismissed"),
-                          duration: Duration(milliseconds: 900),
+                  return _ContactItem(
+                    contact,
+                    onClick: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TransactionForm(contact),
                         ),
                       );
                     },
-                    background: Container(
-                      color: Colors.red,
-                    ),
                   );
                 },
                 itemCount: contacts.length,
               );
-
               break;
           }
           return Text('Unknown error');
@@ -79,7 +60,7 @@ class _ContactsListState extends State<ContactsList> {
             MaterialPageRoute(
               builder: (context) => ContactForm(),
             ),
-          );
+          ).then((value) => setState(() {}));
         },
         child: Icon(
           Icons.add,

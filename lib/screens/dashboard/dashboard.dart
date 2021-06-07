@@ -1,5 +1,5 @@
-import 'package:bytebank/screens/contacts_list.dart';
-import 'package:bytebank/screens/transactions_list.dart';
+import 'package:bytebank/screens/contact/contacts_list.dart';
+import 'package:bytebank/screens/transaction/transactions_list.dart';
 import 'package:flutter/material.dart';
 
 class DashBoard extends StatelessWidget {
